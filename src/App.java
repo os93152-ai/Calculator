@@ -1,4 +1,8 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeThat;
 
 import java.util.ArrayList;
 
@@ -6,8 +10,10 @@ import org.junit.*; // For JUnit 5
 
 public class App {
 
+    
     @Test
-    public void addTest(){
+    public void addTest() throws Exception{
+
         assertEquals("Test Case 1 : Failed", add(""), 0);
         assertEquals("Test Case 2 : Failed", add("0"), 0);
         assertEquals("Test Case 3 : Failed", add("1"), 1);
@@ -30,39 +36,54 @@ public class App {
         assertEquals("Test Case 17 : Failed", add("//;\n1;2"), 3);
         assertEquals("Test Case 18 : Failed", add("//+\n1+2+4+9+4+6\n0\n5\n7"), 
                                                                 (1+2+4+9+4+6+0+5+7));
-        assertEquals("Test Case 19 : Failed", add("1,-2"), "negative numbers not allowed -2");      
+        assertEquals("Test Case 19 : Failed", assertThrows(Exception.class, () -> add("1,-2")).getMessage(), "negative numbers not allowed -2");      
+        
+        
+        
 
+    
     }
 
-    public static ArrayList<Long> parseNumberString(char delimiter, String str){
+    public static ArrayList<Long> parseNumberString(char delimiter, String str) throws Exception{
         str = str+delimiter;
         int len = str.length();
         String token = "";
         ArrayList<Long> numberList = new ArrayList<>();
+        String negativeNumbers = "";
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
             if(ch == delimiter || ch == '\n'){
                 long n0 = 0;
                 if(token.length() > 0)
                 n0 = Long.valueOf(token);
-                numberList.add(n0);
+                if(n0 < 0)
+                    negativeNumbers += ","+token;
+                else
+                    numberList.add(n0);
                 token = "";
             }
             else{
                 token += ch;
             }
         }
+        if(negativeNumbers.length() > 0)
+            throw new Exception("negative numbers not allowed "+negativeNumbers.substring(1));
         return numberList;
     }
 
-    public static long add(String numbers){
+    public static long add(String numbers)throws Exception{
         char delimiter = ',';
         if(numbers.startsWith("//")){
             delimiter = numbers.charAt(2);
             numbers = numbers.substring(4);
         }
         ArrayList<Long> numberList = new ArrayList<>();
+        try{
         numberList = parseNumberString(delimiter, numbers);
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
         Long answer = 0L;
         for(Long num : numberList)
             answer += num;
