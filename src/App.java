@@ -1,11 +1,7 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeThat;
-
 import java.util.ArrayList;
-
+import java.util.Scanner;
 import org.junit.*; // For JUnit 5
 
 public class App {
@@ -37,7 +33,7 @@ public class App {
         assertEquals("Test Case 18 : Failed", add("//+\n1+2+4+9+4+6\n0\n5\n7"), 
                                                                 (1+2+4+9+4+6+0+5+7));
         assertEquals("Test Case 19 : Failed", assertThrows(Exception.class, () -> add("1,-2")).getMessage(), "negative numbers not allowed -2");      
-        
+        assertEquals("Test Case 19 : Failed", assertThrows(Exception.class, () -> add("1,-2,-14,7,14,-9\n-4\n-5")).getMessage(), "negative numbers not allowed -2,-14,-9,-4,-5");      
         
         
 
@@ -52,11 +48,11 @@ public class App {
         String negativeNumbers = "";
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
-            if(ch == delimiter || ch == '\n'){
+            if(ch == delimiter || ch == '\n' || (i+1 < len && ch == '\\' && str.charAt(++i) == 'n' )){
                 long n0 = 0;
                 if(token.length() > 0)
                 n0 = Long.valueOf(token);
-                if(n0 < 0)
+                if(n0 < 0) 
                     negativeNumbers += ","+token;
                 else
                     numberList.add(n0);
@@ -78,12 +74,7 @@ public class App {
             numbers = numbers.substring(4);
         }
         ArrayList<Long> numberList = new ArrayList<>();
-        try{
         numberList = parseNumberString(delimiter, numbers);
-        }
-        catch(Exception e){
-            throw new Exception(e.getMessage());
-        }
         Long answer = 0L;
         for(Long num : numberList)
             answer += num;
@@ -92,6 +83,9 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter the string : ");
+        String numbeString = in.nextLine();
+        System.out.println(add(numbeString));
     }
 }
