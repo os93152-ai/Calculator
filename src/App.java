@@ -11,7 +11,10 @@ public class App {
     }
 
     public static int add(String numbers){
-        return 0;
+        int n = 0;
+        if(numbers.length() > 0)
+            n = Integer.parseInt(numbers);
+        return n;
     }
 
     public static void main(String[] args) throws Exception {
