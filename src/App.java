@@ -4,9 +4,9 @@ import org.junit.*; // For JUnit 5
 public class App {
 
     @Test
-    public static void addTest(){
+    public void addTest(){
         System.out.println("TESTING .....");
-        assertEquals(add(""), 0);
+        assertEquals("Test Case 1 : Failed", add(""), 0);
     }
 
     public static int add(String numbers){
@@ -15,6 +15,5 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
-
     }
 }
