@@ -21,11 +21,35 @@ public class App {
         assertEquals("Test Case 11 : Failed", add("1,2"), 3);
     }
 
+    public static ArrayList<Long> parseNumberString(String str){
+        str = str+",";
+        int len = str.length();
+        String token = "";
+        ArrayList<Long> numberList = new ArrayList<>();
+        for(int i = 0; i < len; i++){
+            char ch = str.charAt(i);
+            if(ch == ','){
+                long n0 = 0;
+                if(token.length() > 0)
+                n0 = Long.valueOf(token);
+                numberList.add(n0);
+                token = "";
+            }
+            else{
+                token += ch;
+            }
+        }
+        return numberList;
+    }
+
     public static long add(String numbers){
-        long n = 0;
-        if(numbers.length() > 0)
-            n = Long.valueOf(numbers);
-        return n;
+        ArrayList<Long> numberList = new ArrayList<>();
+        numberList = parseNumberString(numbers);
+        Long answer = 0L;
+        for(Long num : numberList)
+            answer += num;
+
+        return answer;
     }
 
     public static void main(String[] args) throws Exception {
