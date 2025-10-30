@@ -13,11 +13,11 @@ public class App {
         assertEquals("Test Case 3 : Failed", add("25"), 25);
         assertEquals("Test Case 3 : Failed", add("153"), 153);
         assertEquals("Test Case 3 : Failed", add("9368"), 9368);
-        assertEquals("Test Case 3 : Failed", add("9876543210"), 9876543210);
+        assertEquals("Test Case 3 : Failed", add("9876543210"), 9876543210L);
     }
 
-    public static int add(String numbers){
-        int n = 0;
+    public static long add(String numbers){
+        long n = 0;
         if(numbers.length() > 0)
             n = Integer.parseInt(numbers);
         return n;
