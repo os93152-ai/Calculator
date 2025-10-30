@@ -19,6 +19,13 @@ public class App {
         assertEquals("Test Case 9 : Failed", add("9876543210"), 9876543210L);
         assertEquals("Test Case 10 : Failed", add("98767485955524"), 98767485955524L);
         assertEquals("Test Case 11 : Failed", add("1,2"), 3);
+        assertEquals("Test Case 12 : Failed", add("1035,26390"), (1035+26390));
+        assertEquals("Test Case 13 : Failed", add("9876543210,98767485955524,1035,26390"), 
+                                                            (9876543210L+98767485955524L+1035L+26390L));
+        assertEquals("Test Case 14 : Failed", add("9876543210,98767485955524,1035,26390,"), 
+                                                            (9876543210L+98767485955524L+1035L+26390L));
+        assertEquals("Test Case 12 : Failed", add("1035,26390/n567"), (1035+26390+567));
+        
     }
 
     public static ArrayList<Long> parseNumberString(String str){
