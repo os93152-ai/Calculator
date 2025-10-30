@@ -31,21 +31,19 @@ public class App {
 
     }
 
-    public static ArrayList<Long> parseNumberString(String str){
-        str = str+",";
+    public static ArrayList<Long> parseNumberString(char delimiter, String str){
+        str = str+delimiter;
         int len = str.length();
         String token = "";
         ArrayList<Long> numberList = new ArrayList<>();
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
-            if(ch == ',' || ch == '\n'){
+            if(ch == delimiter || ch == '\n'){
                 long n0 = 0;
                 if(token.length() > 0)
                 n0 = Long.valueOf(token);
                 numberList.add(n0);
                 token = "";
-                if(ch == '/')
-                    i++;
             }
             else{
                 token += ch;
@@ -55,8 +53,13 @@ public class App {
     }
 
     public static long add(String numbers){
+        char delimiter = ',';
+        if(numbers.startsWith("//")){
+            delimiter = numbers.charAt(2);
+            numbers = numbers.substring(4);
+        }
         ArrayList<Long> numberList = new ArrayList<>();
-        numberList = parseNumberString(numbers);
+        numberList = parseNumberString(delimiter, numbers);
         Long answer = 0L;
         for(Long num : numberList)
             answer += num;
