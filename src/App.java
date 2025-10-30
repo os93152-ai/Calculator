@@ -28,6 +28,9 @@ public class App {
         assertEquals("Test Case 16 : Failed", add("10,26\n39,46\n5,6,7\n"), 
                                                     (10+26+39+46+5+6+7));
         assertEquals("Test Case 17 : Failed", add("//;\n1;2"), 3);
+        assertEquals("Test Case 18 : Failed", add("//+\n1+2+4+9+4+6\n0\n5\n7"), 
+                                                                (1+2+4+9+4+6+0+5+7));
+        assertEquals("Test Case 19 : Failed", add("1,-2"), "negative numbers not allowed -2");      
 
     }
 
