@@ -27,6 +27,7 @@ public class App {
         assertEquals("Test Case 15 : Failed", add("1035,26390\n567"), (1035+26390+567));
         assertEquals("Test Case 16 : Failed", add("10,26\n39,46\n5,6,7\n"), 
                                                     (10+26+39+46+5+6+7));
+        assertEquals("Test Case 17 : Failed", add("//;\n1;2"), 3);
 
     }
 
