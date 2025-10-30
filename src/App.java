@@ -5,8 +5,9 @@ public class App {
 
     @Test
     public void addTest(){
-        System.out.println("TESTING .....");
         assertEquals("Test Case 1 : Failed", add(""), 0);
+        assertEquals("Test Case 2 : Failed", add("0"), 0);
+        assertEquals("Test Case 3 : Failed", add("1"), 1);
     }
 
     public static int add(String numbers){
