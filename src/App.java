@@ -19,7 +19,7 @@ public class App {
     public static long add(String numbers){
         long n = 0;
         if(numbers.length() > 0)
-            n = Long.valueOf(numbers);
+            n = Integer.parseInt(numbers);
         return n;
     }
 
