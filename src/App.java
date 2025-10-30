@@ -14,12 +14,13 @@ public class App {
         assertEquals("Test Case 3 : Failed", add("153"), 153);
         assertEquals("Test Case 3 : Failed", add("9368"), 9368);
         assertEquals("Test Case 3 : Failed", add("9876543210"), 9876543210L);
+        assertEquals("Test Case 3 : Failed", add("98767485955524"), 98767485955524L);
     }
 
     public static long add(String numbers){
         long n = 0;
         if(numbers.length() > 0)
-            n = Integer.parseInt(numbers);
+            n = Long.valueOf(numbers);
         return n;
     }
 
