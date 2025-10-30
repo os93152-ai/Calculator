@@ -24,8 +24,7 @@ public class App {
                                                             (9876543210L+98767485955524L+1035L+26390L));
         assertEquals("Test Case 14 : Failed", add("9876543210,98767485955524,1035,26390,"), 
                                                             (9876543210L+98767485955524L+1035L+26390L));
-        assertEquals("Test Case 12 : Failed", add("1035,26390/n567"), (1035+26390+567));
-        
+        assertEquals("Test Case 15 : Failed", add("1035,26390/n567"), (1035+26390+567));
     }
 
     public static ArrayList<Long> parseNumberString(String str){
@@ -35,12 +34,14 @@ public class App {
         ArrayList<Long> numberList = new ArrayList<>();
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
-            if(ch == ','){
+            if(ch == ',' || (ch == '/' && i+1 < len && str.charAt(i+1) == 'n')){
                 long n0 = 0;
                 if(token.length() > 0)
                 n0 = Long.valueOf(token);
                 numberList.add(n0);
                 token = "";
+                if(ch == '/')
+                    i++;
             }
             else{
                 token += ch;
