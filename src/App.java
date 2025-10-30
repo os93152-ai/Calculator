@@ -33,9 +33,9 @@ public class App {
         assertEquals("Test Case 18 : Failed", add("//+\n1+2+4+9+4+6\n0\n5\n7"), 
                                                                 (1+2+4+9+4+6+0+5+7));
         assertEquals("Test Case 19 : Failed", assertThrows(Exception.class, () -> add("1,-2")).getMessage(), "negative numbers not allowed -2");      
-        assertEquals("Test Case 19 : Failed", assertThrows(Exception.class, () -> add("1,-2,-14,7,14,-9\n-4\n-5")).getMessage(), "negative numbers not allowed -2,-14,-9,-4,-5");      
+        assertEquals("Test Case 20 : Failed", assertThrows(Exception.class, () -> add("1,-2,-14,7,14,-9\n-4\n-5")).getMessage(), "negative numbers not allowed -2,-14,-9,-4,-5");      
         
-        
+        assertEquals("Test Case 21 : Failed", add("203,5,8030,4,4,1001"), (203+5+4+4));
 
     
     }
@@ -54,8 +54,10 @@ public class App {
                 n0 = Long.valueOf(token);
                 if(n0 < 0) 
                     negativeNumbers += ","+token;
-                else
-                    numberList.add(n0);
+                else{
+                    if(n0 <= 1000)
+                        numberList.add(n0);
+                }
                 token = "";
             }
             else{
