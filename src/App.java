@@ -1,5 +1,7 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import org.junit.*; // For JUnit 5
@@ -36,19 +38,20 @@ public class App {
         assertEquals("Test Case 20 : Failed", assertThrows(Exception.class, () -> add("1,-2,-14,7,14,-9\n-4\n-5")).getMessage(), "negative numbers not allowed -2,-14,-9,-4,-5");      
         
         assertEquals("Test Case 21 : Failed", add("203,5,8030,4,4,1001"), (203+5+8030+4+4+1001));
-        assertEquals("Test Case 22 : Failed", add("//[***]\n1;2"), 3);
+        assertEquals("Test Case 22 : Failed", add("//[***]\n1***2"), 3);
     
     }
 
-    public static ArrayList<Long> parseNumberString(char delimiter, String str) throws Exception{
+    public static ArrayList<Long> parseNumberString(String delimiter, String str) throws Exception{
         str = str+delimiter;
         int len = str.length();
+        int dlen = delimiter.length();
         String token = "";
         ArrayList<Long> numberList = new ArrayList<>();
         String negativeNumbers = "";
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
-            if(ch == delimiter || ch == '\n' || (i+1 < len && ch == '\\' && str.charAt(++i) == 'n' )){
+            if((ch == delimiter.charAt(0) &&  (str.substring(i, i+dlen).equals(delimiter))) || ch == '\n' || (i+1 < len && ch == '\\' && str.charAt(++i) == 'n' )){
                 long n0 = 0;
                 if(token.length() > 0)
                 n0 = Long.valueOf(token);
@@ -58,6 +61,8 @@ public class App {
                     numberList.add(n0);
                 }
                 token = "";
+                if(str.substring(i, i+dlen).equals(delimiter))
+                    i = i+dlen-1;
             }
             else{
                 token += ch;
@@ -65,15 +70,42 @@ public class App {
         }
         if(negativeNumbers.length() > 0)
             throw new Exception("negative numbers not allowed "+negativeNumbers.substring(1));
+        
+        System.out.println("Number list formed is : ");
+        for(Long i : numberList)
+            System.out.print(i+", ");
+        System.out.println();
+                
         return numberList;
     }
 
-    public static long add(String numbers)throws Exception{
-        char delimiter = ',';
-        if(numbers.startsWith("//")){
-            delimiter = numbers.charAt(2);
-            numbers = numbers.substring(4);
+    public static String extractDelimiter(String str){
+        String dlmtr = ",";
+        if(str.startsWith("//")){
+            // handle both '/n' as escape charater and not escape charater
+            int dlmtrEnd = str.indexOf('\n'); 
+            if(dlmtrEnd == -1 && str.indexOf('\\') >= 0)
+                dlmtrEnd = str.indexOf('\\');
+            String delimiterString = str.substring(2, dlmtrEnd);
+            if(delimiterString.startsWith("["))
+                dlmtr = delimiterString.substring(delimiterString.indexOf('[')+1, delimiterString.indexOf(']'));
+            else
+                dlmtr = delimiterString;
         }
+        return dlmtr;
+    }
+
+    public static long add(String numbers)throws Exception{
+        String delimiter = extractDelimiter(numbers);
+        if(numbers.startsWith("//")){
+            if(numbers.indexOf('\n') > 0)
+                numbers = numbers.substring(numbers.indexOf('\n')+1);
+            else if(numbers.indexOf('\\') > 0){
+                numbers = numbers.substring(numbers.indexOf('\\')+2);
+            }
+        }
+        System.out.println("Delimiter : "+delimiter);
+        System.out.println("Number string : "+numbers);
         ArrayList<Long> numberList = new ArrayList<>();
         numberList = parseNumberString(delimiter, numbers);
         Long answer = 0L;
