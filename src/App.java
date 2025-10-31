@@ -1,6 +1,5 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -42,17 +41,20 @@ public class App {
         assertEquals("Test Case 23 : Failed", add("//[++]\n210++43++943\n65\n8++42"), (210+43+943+65+8+42));
         assertEquals("Test Case 24 : Failed", add("//[*]\n1*2*3*45\n87"), (1+2+3+45+87));
         assertEquals("Test Case 25 : Failed", add("//[*][+]\n1*2+3*45\n87+2"), (1+2+3+45+87+2));
-
+        assertEquals("Test Case 26 : Failed", add("//[***][++][%^&]\n1***2++3%^&4%^&5\n6++7***8\n9***10++11%^&12"), 
+                                                                (1+2+3+4+5+6+7+8+9+10+11+12));
     }
 
 
 
     public static ArrayList<Long> parseNumberString(ArrayList<String> delimiters, String str) throws Exception{
+        
         str = str+delimiters.get(0);
         int len = str.length();
         String token = "";
         ArrayList<Long> numberList = new ArrayList<>();
         String negativeNumbers = "";
+        
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
             boolean delimiterFlag = false;
@@ -60,8 +62,13 @@ public class App {
                 int dlen = delimiter.length();
                 if((ch == delimiter.charAt(0) &&  (str.substring(i, i+dlen).equals(delimiter))) || ch == '\n' || (i+1 < len && ch == '\\' && str.charAt(++i) == 'n' )){
                     long n0 = 0;
+                    try{
                     if(token.length() > 0)
-                    n0 = Long.valueOf(token);
+                        n0 = Long.valueOf(token);
+                    }
+                    catch(Exception e){
+                        throw new Exception("Illegal token found ... "+token+" is not a number");
+                    }
                     if(n0 < 0) 
                         negativeNumbers += ","+token;
                     else{
