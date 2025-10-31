@@ -39,7 +39,9 @@ public class App {
         
         assertEquals("Test Case 21 : Failed", add("203,5,8030,4,4,1001"), (203+5+8030+4+4+1001));
         assertEquals("Test Case 22 : Failed", add("//[***]\n1***2"), 3);
-    
+        assertEquals("Test Case 22 : Failed", add("//[++]\n210++43++943\n65\n8++42"), (210+43+943+65+8+42));
+        assertEquals("Test Case 22 : Failed", add("//[*]\n1*2*3*45\n87"), (1+2+3+45+87));
+        assertEquals("Test Case 22 : Failed", add("//[*][+]\n1*2+3*45\n87+2"), (1+2+3+45+87+2));
     }
 
     public static ArrayList<Long> parseNumberString(String delimiter, String str) throws Exception{
@@ -75,7 +77,7 @@ public class App {
         for(Long i : numberList)
             System.out.print(i+", ");
         System.out.println();
-                
+
         return numberList;
     }
 
