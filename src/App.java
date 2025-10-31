@@ -39,36 +39,43 @@ public class App {
         
         assertEquals("Test Case 21 : Failed", add("203,5,8030,4,4,1001"), (203+5+8030+4+4+1001));
         assertEquals("Test Case 22 : Failed", add("//[***]\n1***2"), 3);
-        assertEquals("Test Case 22 : Failed", add("//[++]\n210++43++943\n65\n8++42"), (210+43+943+65+8+42));
-        assertEquals("Test Case 22 : Failed", add("//[*]\n1*2*3*45\n87"), (1+2+3+45+87));
-        assertEquals("Test Case 22 : Failed", add("//[*][+]\n1*2+3*45\n87+2"), (1+2+3+45+87+2));
+        assertEquals("Test Case 23 : Failed", add("//[++]\n210++43++943\n65\n8++42"), (210+43+943+65+8+42));
+        assertEquals("Test Case 24 : Failed", add("//[*]\n1*2*3*45\n87"), (1+2+3+45+87));
+        assertEquals("Test Case 25 : Failed", add("//[*][+]\n1*2+3*45\n87+2"), (1+2+3+45+87+2));
+
     }
 
-    public static ArrayList<Long> parseNumberString(String delimiter, String str) throws Exception{
-        str = str+delimiter;
+
+
+    public static ArrayList<Long> parseNumberString(ArrayList<String> delimiters, String str) throws Exception{
+        str = str+delimiters.get(0);
         int len = str.length();
-        int dlen = delimiter.length();
         String token = "";
         ArrayList<Long> numberList = new ArrayList<>();
         String negativeNumbers = "";
         for(int i = 0; i < len; i++){
             char ch = str.charAt(i);
-            if((ch == delimiter.charAt(0) &&  (str.substring(i, i+dlen).equals(delimiter))) || ch == '\n' || (i+1 < len && ch == '\\' && str.charAt(++i) == 'n' )){
-                long n0 = 0;
-                if(token.length() > 0)
-                n0 = Long.valueOf(token);
-                if(n0 < 0) 
-                    negativeNumbers += ","+token;
-                else{
-                    numberList.add(n0);
+            boolean delimiterFlag = false;
+            for(String delimiter : delimiters){
+                int dlen = delimiter.length();
+                if((ch == delimiter.charAt(0) &&  (str.substring(i, i+dlen).equals(delimiter))) || ch == '\n' || (i+1 < len && ch == '\\' && str.charAt(++i) == 'n' )){
+                    long n0 = 0;
+                    if(token.length() > 0)
+                    n0 = Long.valueOf(token);
+                    if(n0 < 0) 
+                        negativeNumbers += ","+token;
+                    else{
+                        numberList.add(n0);
+                    }
+                    token = "";
+                    if(str.substring(i, i+dlen).equals(delimiter))
+                        i = i+dlen-1;
+                    delimiterFlag = true;
+                    break;
                 }
-                token = "";
-                if(str.substring(i, i+dlen).equals(delimiter))
-                    i = i+dlen-1;
             }
-            else{
+            if(delimiterFlag == false)
                 token += ch;
-            }
         }
         if(negativeNumbers.length() > 0)
             throw new Exception("negative numbers not allowed "+negativeNumbers.substring(1));
@@ -81,24 +88,39 @@ public class App {
         return numberList;
     }
 
-    public static String extractDelimiter(String str){
-        String dlmtr = ",";
+    public static ArrayList<String> extractDelimiters(String str){
+        
+        ArrayList<String> delimiters = new ArrayList<>(); 
+
         if(str.startsWith("//")){
+
             // handle both '/n' as escape charater and not escape charater
             int dlmtrEnd = str.indexOf('\n'); 
             if(dlmtrEnd == -1 && str.indexOf('\\') >= 0)
                 dlmtrEnd = str.indexOf('\\');
             String delimiterString = str.substring(2, dlmtrEnd);
-            if(delimiterString.startsWith("["))
-                dlmtr = delimiterString.substring(delimiterString.indexOf('[')+1, delimiterString.indexOf(']'));
+
+            if(delimiterString.startsWith("[")){
+                String dlmtr;
+                while(delimiterString.length() > 0){
+                    dlmtr = delimiterString.substring(delimiterString.indexOf('[')+1, delimiterString.indexOf(']'));
+                    delimiters.add(dlmtr);
+                    if(delimiterString.equals(dlmtr) == false)
+                    delimiterString = delimiterString.substring(delimiterString.indexOf(']')+1);
+                }
+            }
             else
-                dlmtr = delimiterString;
+                delimiters.add(delimiterString);
         }
-        return dlmtr;
+
+        if(delimiters.size() == 0)
+            delimiters.add(",");
+
+        return delimiters;
     }
 
     public static long add(String numbers)throws Exception{
-        String delimiter = extractDelimiter(numbers);
+        ArrayList<String> delimiters = extractDelimiters(numbers);
         if(numbers.startsWith("//")){
             if(numbers.indexOf('\n') > 0)
                 numbers = numbers.substring(numbers.indexOf('\n')+1);
@@ -106,10 +128,10 @@ public class App {
                 numbers = numbers.substring(numbers.indexOf('\\')+2);
             }
         }
-        System.out.println("Delimiter : "+delimiter);
+
         System.out.println("Number string : "+numbers);
         ArrayList<Long> numberList = new ArrayList<>();
-        numberList = parseNumberString(delimiter, numbers);
+        numberList = parseNumberString(delimiters, numbers);
         Long answer = 0L;
         for(Long num : numberList)
             answer += num;
